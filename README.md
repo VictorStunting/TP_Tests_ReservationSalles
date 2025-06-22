@@ -74,9 +74,13 @@
   npm install
   ```
 - **Lancer le serveur** :
+
   ```sh
   npm start
   ```
+
+  Le serveur sera accessible à l’adresse : [http://localhost:3000](http://localhost:3000)
+
 - **Lancer les tests unitaires** :
   ```sh
   npm test
