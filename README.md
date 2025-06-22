@@ -76,7 +76,7 @@
 - **Lancer le serveur** :
 
   ```sh
-  npm start
+  node server.js
   ```
 
   Le serveur sera accessible à l’adresse : [http://localhost:3000](http://localhost:3000)
