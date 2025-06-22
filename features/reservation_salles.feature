@@ -16,6 +16,16 @@ Feature: Gestion des salles de réunion
     When L'utilisateur tente d'ajouter cette salle
     Then L'ajout devrait être refusé avec un message d'erreur "La capacité doit être un entier positif"
 
+    Scenario: Empêcher l'ajout d'une salle avec un nom composé uniquement d'espaces
+    Given Un utilisateur veut ajouter une salle nommée "   " avec une capacité de 10 personnes
+    When L'utilisateur tente d'ajouter cette salle
+    Then L'ajout devrait être refusé avec un message d'erreur "Le nom de la salle ne peut pas être vide"
+
+  Scenario: Empêcher la modification d'une salle avec une capacité négative
+    Given Une salle "Salle A" avec une capacité de 10 personnes existe
+    When L'utilisateur modifie la capacité de la salle "Salle A" à -5 personnes
+    Then La modification devrait être refusée avec un message d'erreur "La capacité doit être un entier positif"
+
 
 
   Scenario: Suppression d'une salle existante
@@ -40,8 +50,8 @@ Feature: Gestion des salles de réunion
 
   Scenario: Réservation d'une salle disponible
     Given Une salle "Salle A" avec une capacité de 10 personnes
-    When L'utilisateur réserve la salle "Salle A" pour le "2023-10-10" de "09:00" à "10:00" pour 5 personnes
-    Then La réservation devrait être confirmée
+    When L'utilisateur réserve la salle "Salle A" pour une date valide de "09:00" à "10:00" pour 5 personnes
+  Then La réservation devrait être confirmée
 
   Scenario: Empêcher la réservation d'une salle déjà occupée
     Given Une salle "Salle A" déjà réservée le "2023-10-10" de "09:00" à "10:00"
@@ -53,6 +63,15 @@ Feature: Gestion des salles de réunion
     When L'utilisateur tente de réserver la salle "Salle A" pour 15 personnes
     Then La réservation devrait être refusée en raison d'une capacité insuffisante
 
+  Scenario: Empêcher la réservation dans le passé
+    Given Une salle "Salle A" avec une capacité de 10 personnes existe
+    When L'utilisateur tente de réserver la salle "Salle A" pour le "2020-01-01" de "09:00" à "10:00" pour 5 personnes
+    Then La réservation devrait être refusée en raison d'une date de début antérieure à aujourd'hui
+
+Scenario: Réservation d'une salle pour aujourd'hui ou dans le futur
+  Given Une salle "Salle B" avec une capacité de 10 personnes existe
+  When L'utilisateur réserve la salle "Salle B" pour une date valide de "09:00" à "10:00" pour 5 personnes
+  Then La réservation devrait être confirmée
 
 
   Scenario: Affichage des réservations pour une journée donnée
@@ -69,3 +88,8 @@ Feature: Gestion des salles de réunion
     Given Des réservations existantes pour la salle "Salle A"
     When L'utilisateur demande à voir les réservations de la salle "Salle A"
     Then La liste des réservations pour cette salle devrait être affichée
+
+  Scenario: Affichage des réservations existantes pour aujourd'hui
+    Given Des réservations existantes pour aujourd'hui
+    When L'utilisateur demande à voir les réservations pour aujourd'hui
+    Then La liste des réservations pour cette journée devrait être affichée

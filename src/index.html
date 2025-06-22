@@ -1,512 +1,137 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Système de Réservation</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
     <h1>Système de Réservation</h1>
-    
+
     <div class="nav-tabs">
-        <button onclick="showTab('salles')">Gestion des Salles</button>
-        <button onclick="showTab('reservations')">Réservations</button>
+      <button onclick="app.showTab('salles')">Gestion des Salles</button>
+      <button onclick="app.showTab('reservations')">Réservations</button>
+      <button onclick="app.showTab('consultation')">
+        Consultation Réservation
+      </button>
     </div>
 
     <!-- Gestion des salles -->
     <div id="salles" class="tab-content">
-        <div class="grid-container">
-            <!-- Colonne gauche -->
-            <div class="card">
-                <h2>Liste des Salles</h2>
-                <div id="listeSalles"></div>
-            </div>
-
-            <!-- Colonne droite -->
-            <div class="column-right">
-                <div class="card">
-                    <h2>Ajouter une Salle</h2>
-                    <input type="text" id="nomSalle" placeholder="Nom de la salle">
-                    <input type="number" id="capaciteSalle" placeholder="Capacité">
-                    <button onclick="ajouterSalle()">Ajouter</button>
-                </div>
-
-                <div class="card">
-                    <h2>Modifier une Salle</h2>
-                    <select id="salleAModifier" onchange="chargerDetailsSalle()"></select>
-                    <input type="text" id="nouveauNom" placeholder="Nouveau nom">
-                    <input type="number" id="nouvelleCapacite" placeholder="Nouvelle capacité">
-                    <button onclick="modifierSalle()">Modifier</button>
-                </div>
-            </div>
+      <div class="grid-container">
+        <div class="card">
+          <h2>Liste des Salles</h2>
+          <div id="listeSalles"></div>
         </div>
+
+        <div class="column-right">
+          <div class="card">
+            <h2>Ajouter une Salle</h2>
+            <input type="text" id="nomSalle" placeholder="Nom de la salle" />
+            <input type="number" id="capaciteSalle" placeholder="Capacité" />
+            <button onclick="app.ajouterSalle()">Ajouter</button>
+          </div>
+
+          <div class="card" id="modificationSalleCard">
+            <h2>Modifier une Salle</h2>
+            <div id="modificationSalleContent">
+              <!-- Le contenu dynamique sera injecté ici -->
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Réservations -->
     <div id="reservations" class="tab-content">
-        <div class="grid-container">
-            <!-- Colonne gauche -->
-            <div class="card">
-                <h2>Liste des Salles Disponibles</h2>
-                <select id="salleReservation" onchange="afficherReservations()"></select>
-                <div id="listeReservations"></div>
-            </div>
-
-            <!-- Colonne droite -->
-            <div class="column-right">
-                <div class="card">
-                    <h2>Nouvelle Réservation</h2>
-                    <div class="datetime-group">
-                        <div>
-                            <label for="dateDebut">Date de début</label>
-                            <input type="date" id="dateDebut" onchange="verifierDisponibilite()">
-                            <input type="time" id="heureDebut" onchange="verifierDisponibilite()" min="08:00" max="18:00">
-                        </div>
-                        <div>
-                            <label for="dateFin">Date de fin</label>
-                            <input type="date" id="dateFin" onchange="verifierDisponibilite()">
-                            <input type="time" id="heureFin" onchange="verifierDisponibilite()" min="08:00" max="18:00">
-                        </div>
-                    </div>
-                    <input type="number" id="nombrePersonnes" placeholder="Nombre de personnes" onchange="verifierCapacite()">
-                    <button onclick="faireReservation()">Réserver</button>
-                </div>
-            </div>
+      <div class="grid-container">
+        <div class="card">
+          <h2>Liste des Salles Disponibles</h2>
+          <select
+            id="salleReservation"
+            onchange="app.afficherReservations()"
+          ></select>
+          <div id="listeReservations"></div>
         </div>
+
+        <div class="column-right">
+          <div class="card">
+            <h2>Nouvelle Réservation</h2>
+            <div class="reservation-info-message">
+              <i class="fa-solid fa-circle-info"></i>
+              Les réservations sont possibles uniquement entre
+              <strong>08:00</strong> et <strong>18:00</strong>.
+            </div>
+            <div class="datetime-group">
+              <div>
+                <label for="dateDebut">Date de début</label>
+                <input
+                  type="date"
+                  id="dateDebut"
+                  onchange="app.verifierDisponibilite()"
+                />
+                <input
+                  type="time"
+                  id="heureDebut"
+                  onchange="app.verifierDisponibilite()"
+                  min="08:00"
+                  max="18:00"
+                />
+              </div>
+              <div>
+                <label for="dateFin">Date de fin</label>
+                <input
+                  type="date"
+                  id="dateFin"
+                  onchange="app.verifierDisponibilite()"
+                />
+                <input
+                  type="time"
+                  id="heureFin"
+                  onchange="app.verifierDisponibilite()"
+                  min="08:00"
+                  max="18:00"
+                />
+              </div>
+            </div>
+            <input
+              type="number"
+              id="nombrePersonnes"
+              placeholder="Nombre de personnes"
+              onchange="app.verifierCapacite()"
+            />
+            <button onclick="app.faireReservation()">Réserver</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Consultation Réservation -->
+    <div id="consultation" class="tab-content">
+      <div class="grid-container">
+        <div class="card">
+          <h2>Recherche par Date</h2>
+          <input type="date" id="consultationDate" />
+          <button onclick="app.afficherReservationsJour()">Afficher</button>
+          <div id="resultatReservationsJour"></div>
+        </div>
+        <div class="card">
+          <h2>Recherche par Salle</h2>
+          <select id="consultationSalle"></select>
+          <button onclick="app.afficherReservationsSalle()">Afficher</button>
+          <div id="resultatReservationsSalle"></div>
+        </div>
+      </div>
     </div>
 
     <div id="alerts"></div>
 
     <script src="api.js"></script>
-<script>
-       async function showTab(tabName) {
-    try {
-        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-        document.getElementById(tabName).classList.add('active');
-        
-        if (tabName === 'salles') {
-            await afficherListeSalles();
-            await mettreAJourSelecteursSalles();
-        } else if (tabName === 'reservations') {
-            await mettreAJourSelecteursSalles();
-            const salleSelect = document.getElementById('salleReservation');
-            // Forcer l'affichage des réservations même s'il n'y a qu'une salle
-            if (salleSelect && salleSelect.options.length > 0) {
-                await afficherReservations();
-            }
-        }
-    } catch (error) {
-        console.error('Erreur dans showTab:', error);
-        afficherAlert('Erreur lors du changement d\'onglet', 'error');
-    }
-}
-
-    async function ajouterSalle() {
-        const nom = document.getElementById('nomSalle').value;
-        const capacite = parseInt(document.getElementById('capaciteSalle').value);
-        try {
-            await api.addSalle({ nom, capacite });
-            await afficherListeSalles();
-            await mettreAJourSelecteursSalles(); // Ajout de cette ligne
-            document.getElementById('nomSalle').value = '';
-            document.getElementById('capaciteSalle').value = '';
-            afficherAlert('Salle ajoutée', 'success');
-        } catch (error) {
-            afficherAlert(error.message, 'error');
-        }
-    }
-
-
-    async function afficherListeSalles() {
-        try {
-            const salles = await api.getSalles();
-            console.log('Salles reçues:', salles); // Debug log
-            const container = document.getElementById('listeSalles');
-            
-            if (!salles || salles.length === 0) {
-                container.innerHTML = '<p>Aucune salle disponible</p>';
-                return;
-            }
-
-            container.innerHTML = salles.map(salle => `
-                <div class="card">
-                    ${salle.nom} - ${salle.capacite} personnes
-                    <button onclick="supprimerSalle('${salle.nom}')">Supprimer</button>
-                </div>
-            `).join('');
-        } catch (error) {
-            console.error('Erreur dans afficherListeSalles:', error);
-            afficherAlert(error.message, 'error');
-        }
-    }
-
-    async function faireReservation() {
-        try {
-            const nomSalle = document.getElementById('salleReservation').value;
-            const dateDebut = document.getElementById('dateDebut').value;
-            const heureDebut = document.getElementById('heureDebut').value;
-            const dateFin = document.getElementById('dateFin').value;
-            const heureFin = document.getElementById('heureFin').value;
-            const nombrePersonnes = document.getElementById('nombrePersonnes').value;
-
-            //Vérification des champs
-            if (!nomSalle || !dateDebut || !heureDebut || !dateFin || !heureFin || !nombrePersonnes) {
-                afficherAlert('Tous les champs sont obligatoires', 'error');
-                return;
-            }
-
-            // Vérification de la capacité
-            const salles = await api.getSalles();
-            const salle = salles.find(s => s.nom === nomSalle);
-            if (!salle) {
-                afficherAlert('Salle non trouvée', 'error');
-                return;
-            }
-
-            // Validation des dates
-            const debut = new Date(`${dateDebut}T${heureDebut}`);
-            const fin = new Date(`${dateFin}T${heureFin}`);
-            
-            if (fin <= debut) {
-                afficherAlert('La date de fin doit être après la date de début', 'error');
-                return;
-            }
-
-            await api.addReservation({
-                nomSalle,
-                dateDebut,
-                heureDebut,
-                dateFin,
-                heureFin,
-                nombrePersonnes: parseInt(nombrePersonnes)
-            });
-
-            afficherAlert('Réservation effectuée', 'success');
-
-             // Forcer le rafraîchissement des réservations
-            await afficherReservations();
-            
-            // Reset form
-            document.getElementById('dateDebut').value = '';
-            document.getElementById('heureDebut').value = '';
-            document.getElementById('dateFin').value = '';
-            document.getElementById('heureFin').value = '';
-            document.getElementById('nombrePersonnes').value = '';
-        } catch (error) {
-            console.error('Erreur réservation:', error);
-            afficherAlert(error.message, 'error');
-        }
-    }
-
-    async function supprimerSalle(nom) {
-        if (confirm('Supprimer cette salle ?')) {
-            try {
-                await api.deleteSalle(nom);
-                await afficherListeSalles();
-                await mettreAJourSelecteursSalles(); // Ajout de cette ligne
-                afficherAlert('Salle supprimée', 'success');
-            } catch (error) {
-                afficherAlert(error.message, 'error');
-            }
-        }
-    }
-
-    function afficherAlert(message, type) {
-        const alerts = document.getElementById('alerts');
-        alerts.textContent = message;
-        alerts.className = type;
-        alerts.style.display = 'block';
-        setTimeout(() => {
-            alerts.style.display = 'none';
-        }, 3000);
-    }
-
-async function afficherReservations() {
-    try {
-        const nomSalle = document.getElementById('salleReservation').value;
-        const container = document.getElementById('listeReservations');
-        
-        console.log('Recherche réservations pour:', nomSalle);
-
-        if (!nomSalle) {
-            container.innerHTML = '<p>Veuillez sélectionner une salle</p>';
-            return;
-        }
-
-        const reservations = await api.getReservationsSalle(nomSalle);
-        console.log('Réservations reçues:', reservations);
-
-        // S'assurer que reservations est toujours un tableau
-        const reservationsArray = Array.isArray(reservations) ? reservations : [];
-
-        if (reservationsArray.length === 0) {
-            container.innerHTML = '<p>Aucune réservation pour cette salle</p>';
-            return;
-        }
-
-        container.innerHTML = reservationsArray.map(reservation => {
-            const formatDate = date => {
-                if (!date) return 'Date non définie';
-                const d = new Date(date);
-                return d.toLocaleString('fr-FR', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
-            };
-
-            return `
-                <div class="reservation-card">
-                    <div class="reservation-details">
-                        <div>
-                            <strong>Début:</strong> ${formatDate(reservation.dateDebut)}
-                        </div>
-                        <div>
-                            <strong>Fin:</strong> ${formatDate(reservation.dateFin)}
-                        </div>
-                        <div>
-                            <strong>Personnes:</strong> ${reservation.nombrePersonnes}
-                        </div>
-                    </div>
-                </div>
-            `;
-        }).join('');
-
-    } catch (error) {
-        console.error('Erreur affichage réservations:', error);
-        console.error('Détails:', error.stack);
-        afficherAlert('Erreur d\'affichage des réservations', 'error');
-    }
-}
-
-
-
-
-    async function verifierDisponibilite() {
-    const nomSalle = document.getElementById('salleReservation').value;
-    const dateDebut = document.getElementById('dateDebut').value;
-    const heureDebut = document.getElementById('heureDebut').value;
-    const dateFin = document.getElementById('dateFin').value;
-    const heureFin = document.getElementById('heureFin').value;
-    
-    if (!dateDebut || !heureDebut || !dateFin || !heureFin) return;
-
-    try {
-        const disponible = await api.checkDisponibilite({
-            nomSalle,
-            dateDebut,
-            heureDebut,
-            dateFin,
-            heureFin
-        });
-
-        const btnReserver = document.querySelector('button[onclick="faireReservation()"]');
-        if (!disponible) {
-            btnReserver.classList.add('salle-indisponible');
-            btnReserver.textContent = 'Salle non disponible';
-            btnReserver.disabled = true;
-        } else {
-            btnReserver.classList.remove('salle-indisponible');
-            btnReserver.textContent = 'Réserver';
-            btnReserver.disabled = false;
-        }
-    } catch (error) {
-        afficherAlert(error.message, 'error');
-    }
-}
-
-
-// Ajouter cette fonction
-async function verifierCapacite() {
-    const nomSalle = document.getElementById('salleReservation').value;
-    const nombrePersonnes = parseInt(document.getElementById('nombrePersonnes').value);
-    
-    if (!nomSalle || !nombrePersonnes) return;
-
-    try {
-        const salles = await api.getSalles();
-        const salle = salles.find(s => s.nom === nomSalle);
-        
-        if (salle && nombrePersonnes > salle.capacite) {
-            afficherAlert(`Le nombre de personnes dépasse la capacité de la salle (${salle.capacite})`, 'error');
-            document.querySelector('button[onclick="faireReservation()"]').disabled = true;
-        } else {
-            document.querySelector('button[onclick="faireReservation()"]').disabled = false;
-        }
-    } catch (error) {
-        console.error('Erreur vérification capacité:', error);
-    }
-}
-
-    // Initialisation
-    showTab('salles');
-
-
-
-
-    // Ajouter dans la section <script>
-    async function chargerDetailsSalle() {
-        try {
-            const nomSalle = document.getElementById('salleAModifier')?.value;
-            if (!nomSalle) return;
-
-            const salles = await api.getSalles();
-            const salle = salles.find(s => s.nom === nomSalle);
-            
-            if (salle) {
-                const nouveauNom = document.getElementById('nouveauNom');
-                const nouvelleCapacite = document.getElementById('nouvelleCapacite');
-                
-                if (nouveauNom && nouvelleCapacite) {
-                    nouveauNom.value = salle.nom;
-                    nouvelleCapacite.value = salle.capacite;
-                }
-            }
-        } catch (error) {
-            console.error('Erreur dans chargerDetailsSalle:', error);
-            afficherAlert('Erreur lors du chargement des détails', 'error');
-        }
-    }
-
-async function modifierSalle() {
-    try {
-        const nomActuel = document.getElementById('salleAModifier').value;
-        const nouveauNom = document.getElementById('nouveauNom').value.trim();
-        const nouvelleCapacite = parseInt(document.getElementById('nouvelleCapacite').value);
-
-        console.log('Modification salle - Données initiales:', {
-            nomActuel,
-            nouveauNom,
-            nouvelleCapacite
-        });
-
-        // Validations
-        if (!nomActuel) {
-            afficherAlert('Aucune salle sélectionnée', 'error');
-            return;
-        }
-
-        if (!nouvelleCapacite || nouvelleCapacite <= 0) {
-            afficherAlert('Capacité invalide', 'error');
-            return;
-        }
-
-        // Vérifier si la salle existe
-        const salles = await api.getSalles();
-        const salleExistante = salles.find(s => s.nom === nomActuel);
-
-        if (!salleExistante) {
-            afficherAlert('Salle introuvable', 'error');
-            return;
-        }
-
-        // Préparation des données de modification
-        const donneesModification = {
-            nom: nouveauNom || nomActuel, // Garder l'ancien nom si pas de nouveau nom
-            capacite: nouvelleCapacite
-        };
-
-        console.log('Données de modification:', donneesModification);
-
-        // Appel API avec le nom actuel
-        await api.updateSalle(salleExistante.nom, donneesModification);
-
-        // Mettre à jour l'interface
-        await afficherListeSalles();
-        await mettreAJourSelecteursSalles();
-
-        // Mettre à jour les champs du formulaire
-        const nouveauNomInput = document.getElementById('nouveauNom');
-        const nouvelleCapaciteInput = document.getElementById('nouvelleCapacite');
-        const selectModif = document.getElementById('salleAModifier');
-
-        if (nouveauNomInput && nouvelleCapaciteInput && selectModif) {
-            const nomFinal = donneesModification.nom;
-            nouveauNomInput.value = nomFinal;
-            nouvelleCapaciteInput.value = donneesModification.capacite;
-            selectModif.value = nomFinal;
-        }
-
-        afficherAlert('Salle modifiée avec succès', 'success');
-    } catch (error) {
-        console.error('Erreur modification salle:', error);
-        afficherAlert(error.message, 'error');
-    }
-}
-
-
-// Ajouter aussi cette fonction d'aide
-function formatDate(date) {
-    if (!date) return '';
-    return new Date(date).toLocaleDateString('fr-FR');
-}
-
-
-
-async function mettreAJourSelecteursSalles() {
-    try {
-        const salles = await api.getSalles();
-        
-        // Sélectionner les éléments de manière plus fiable
-        const modificationCard = Array.from(document.querySelectorAll('.card')).find(card => 
-            card.querySelector('h2')?.textContent.includes('Modifier une Salle')
-        );
-        const reservationSelect = document.getElementById('salleReservation');
-
-        if (!salles || salles.length === 0) {
-            if (modificationCard) {
-                modificationCard.innerHTML = `
-                    <h2>Modifier une Salle</h2>
-                    <p class="message-info">Aucune salle à modifier</p>
-                `;
-            }
-            if (reservationSelect) {
-                reservationSelect.innerHTML = '<option value="">Aucune salle disponible</option>';
-            }
-            return;
-        }
-
-        const options = salles.map(salle => 
-            `<option value="${salle.nom}">${salle.nom} (${salle.capacite} pers.)</option>`
-        ).join('');
-
-        if (reservationSelect) {
-            reservationSelect.innerHTML = options;
-        }
-
-        if (modificationCard) {
-            modificationCard.innerHTML = `
-                <h2>Modifier une Salle</h2>
-                <select id="salleAModifier" onchange="chargerDetailsSalle()">${options}</select>
-                <div class="modification-inputs">
-                    <input type="text" id="nouveauNom" placeholder="Nouveau nom">
-                    <input type="number" id="nouvelleCapacite" placeholder="Nouvelle capacité">
-                    <button onclick="modifierSalle()">Modifier</button>
-                </div>
-            `;
-
-            // Charger les détails initiaux si des salles existent
-            if (salles.length > 0) {
-                const salleCourante = salles[0];
-                document.getElementById('nouveauNom').value = salleCourante.nom;
-                document.getElementById('nouvelleCapacite').value = salleCourante.capacite;
-                document.getElementById('salleAModifier').value = salleCourante.nom;
-            }
-        }
-
-        // Appeler chargerDetailsSalle une fois après la mise à jour
-        await chargerDetailsSalle();
-
-    } catch (error) {
-        console.error('Erreur dans mettreAJourSelecteursSalles:', error);
-        afficherAlert('Erreur lors de la mise à jour des sélecteurs', 'error');
-    }
-}
-
-
-</script>
-</body>
+    <script src="app.js"></script>
+  </body>
 </html>
